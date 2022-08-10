@@ -19,6 +19,8 @@ public class AddressBookModel {
     private String city;
     private String state;
     private int zip;
+    private String emailId;
+    private String password;
     private long phoneNumber;
     private LocalDateTime registerDate;
     private LocalDateTime updatedDate;
@@ -31,6 +33,8 @@ public class AddressBookModel {
         this.state = addressBookDTO.getState();
         this.phoneNumber = addressBookDTO.getPhoneNumber();
         this.zip = addressBookDTO.getZip();
+        this.emailId=addressBookDTO.getEmailId();
+        this.password=addressBookDTO.getPassword();
     }
 
     public AddressBookModel() {

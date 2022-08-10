@@ -4,6 +4,8 @@ import com.bridgelabz.addressbookspring.dto.AddressBookDTO;
 import com.bridgelabz.addressbookspring.exception.AddressBookException;
 import com.bridgelabz.addressbookspring.model.AddressBookModel;
 import com.bridgelabz.addressbookspring.repository.AddressBookRepository;
+import com.bridgelabz.addressbookspring.util.ResponseUtil;
+import com.bridgelabz.addressbookspring.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,8 @@ import java.util.Optional;
 public class AddressBookService implements IAddressBookService {
     @Autowired
     AddressBookRepository addressBookRepository;
+    @Autowired
+    TokenUtil tokenUtil;
 
     @Override
     public AddressBookModel addContact(AddressBookDTO addressBookDTO) {
@@ -44,13 +48,18 @@ public class AddressBookService implements IAddressBookService {
     }
 
     @Override
-    public List<AddressBookModel> getEmployees() {
-        List<AddressBookModel> isContactPresent = addressBookRepository.findAll();
-        if (isContactPresent.size() > 0) {
-            return isContactPresent;
-        } else {
-            throw new AddressBookException(400, "No Contacts Is there");
+    public List<AddressBookModel> getEmployees(String token) {
+        Long contactId =tokenUtil.decodeToken(token);
+        Optional<AddressBookModel> isContactIsPresent=addressBookRepository.findById(contactId);
+        if (isContactIsPresent.isPresent()) {
+            List<AddressBookModel> isContactPresent = addressBookRepository.findAll();
+            if (isContactPresent.size() > 0) {
+                return isContactPresent;
+            } else {
+                throw new AddressBookException(400, "No Contacts Is there");
+            }
         }
+        throw new AddressBookException(400,"Token is wrong");
     }
 
     @Override
@@ -72,5 +81,19 @@ public class AddressBookService implements IAddressBookService {
         } else {
             throw new AddressBookException(400, "Contact not found");
         }
+    }
+
+    @Override
+    public ResponseUtil login(String emailId, String password) {
+        Optional<AddressBookModel> isEmailPresent = addressBookRepository.findByEmailId(emailId);
+        if (isEmailPresent.isPresent()) {
+            if (isEmailPresent.get().getPassword().equals(password)) {
+                String token = tokenUtil.createToken(isEmailPresent.get().getId());
+                return new ResponseUtil(200, "LoginSuccess", token);
+            } else {
+                throw new AddressBookException(400, "Password wrong");
+            }
+        }
+        throw new AddressBookException(400, "No Contact Found");
     }
 }
