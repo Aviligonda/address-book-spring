@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class AddressBookSpringApplication {
 
     public static void main(String[] args) {
+        System.out.println("Welcome to Spring AddressBook  Program");
         SpringApplication.run(AddressBookSpringApplication.class, args);
     }
 
