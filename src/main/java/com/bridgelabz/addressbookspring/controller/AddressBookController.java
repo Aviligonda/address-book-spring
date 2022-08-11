@@ -21,8 +21,8 @@ public class AddressBookController {
     }
 
     @PutMapping("/updatecontact/{id}")
-    public AddressBookModel updateContact(@PathVariable Long id, @RequestBody AddressBookDTO addressBookDTO) {
-        return addressBookService.updateContact(id, addressBookDTO);
+    public AddressBookModel updateContact(@PathVariable Long id, @RequestBody AddressBookDTO addressBookDTO,@RequestHeader String token) {
+        return addressBookService.updateContact(id, addressBookDTO,token);
     }
 
     @GetMapping("/getemployees")
@@ -31,13 +31,13 @@ public class AddressBookController {
     }
 
     @DeleteMapping("/deletecontact/{id}")
-    public AddressBookModel deleteContact(@PathVariable Long id) {
-        return addressBookService.deleteContact(id);
+    public AddressBookModel deleteContact(@PathVariable Long id,@RequestHeader String token) {
+        return addressBookService.deleteContact(id,token);
     }
 
     @GetMapping("/getemp/{id}")
-    public AddressBookModel getEmp(@PathVariable Long id) {
-        return addressBookService.getEmp(id);
+    public AddressBookModel getEmp(@PathVariable Long id,@RequestHeader String token) {
+        return addressBookService.getEmp(id,token);
     }
 
     @PostMapping("/login")
