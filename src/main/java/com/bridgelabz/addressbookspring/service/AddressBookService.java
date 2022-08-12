@@ -19,12 +19,17 @@ public class AddressBookService implements IAddressBookService {
     AddressBookRepository addressBookRepository;
     @Autowired
     TokenUtil tokenUtil;
+    @Autowired
+    MailService mailService;
 
     @Override
     public AddressBookModel addContact(AddressBookDTO addressBookDTO) {
         AddressBookModel addressBookModel = new AddressBookModel(addressBookDTO);
         addressBookModel.setRegisterDate(LocalDateTime.now());
         addressBookRepository.save(addressBookModel);
+        String body = "Contact added Successfully with Contact id is :" + addressBookModel.getId();
+        String subject = "Contact added Successfully....";
+        mailService.send(addressBookModel.getEmailId(), body, subject);
         return addressBookModel;
     }
 
@@ -44,6 +49,9 @@ public class AddressBookService implements IAddressBookService {
                 isContactPresent.get().setZip(addressBookDTO.getZip());
                 isContactPresent.get().setUpdatedDate(LocalDateTime.now());
                 addressBookRepository.save(isContactPresent.get());
+                String body = "Contact Updated Successfully with Contact id is :" + isContactPresent.get().getId();
+                String subject = "Contact Updated Successfully....";
+                mailService.send(isContactPresent.get().getEmailId(), body, subject);
                 return isContactPresent.get();
             } else {
                 throw new AddressBookException(400, "Contact is not Found");
@@ -75,6 +83,9 @@ public class AddressBookService implements IAddressBookService {
             Optional<AddressBookModel> isContactPresent = addressBookRepository.findById(id);
             if (isContactPresent.isPresent()) {
                 addressBookRepository.delete(isContactPresent.get());
+                String body = "Contact Deleted Successfully with Contact id is :" + isContactPresent.get().getId();
+                String subject = "Contact Deleted Successfully....";
+                mailService.send(isContactPresent.get().getEmailId(), body, subject);
                 return isContactPresent.get();
             } else {
                 throw new AddressBookException(400, "Contact not Found");
