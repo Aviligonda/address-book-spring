@@ -7,6 +7,7 @@ import com.bridgelabz.addressbookspring.repository.AddressBookRepository;
 import com.bridgelabz.addressbookspring.util.ResponseUtil;
 import com.bridgelabz.addressbookspring.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -121,5 +122,46 @@ public class AddressBookService implements IAddressBookService {
             }
         }
         throw new AddressBookException(400, "No Contact Found");
+    }
+
+    @Override
+    public List<AddressBookModel> sorting() {
+        List<AddressBookModel> sorting = addressBookRepository.findAll(Sort.by(Sort.Direction.ASC, "firstName"));
+        if (sorting.size() > 0) {
+            return sorting;
+        } else {
+            throw new AddressBookException(400, "No contacts found");
+        }
+    }
+
+    @Override
+    public List<AddressBookModel> findByCityName(String city) {
+        List<AddressBookModel> isCityPresent = addressBookRepository.findByCityContainsIgnoreCase(city);
+        if (isCityPresent.size() > 0) {
+            return isCityPresent;
+        } else {
+            throw new AddressBookException(400, "No contact found with this city name");
+        }
+    }
+
+
+    @Override
+    public List<AddressBookModel> findByStateName(String state) {
+        List<AddressBookModel> isState = addressBookRepository.findByState(state);
+        if (isState.size() > 0) {
+            return isState;
+        } else {
+            throw new AddressBookException(400, "No contact found with this state name");
+        }
+    }
+
+    @Override
+    public List<AddressBookModel> sortByLastName() {
+        List<AddressBookModel> isContactsPresent = addressBookRepository.sortingByLastName();
+        if (isContactsPresent.size() > 0) {
+            return isContactsPresent;
+        } else {
+            throw new AddressBookException(400, "No Contacts found");
+        }
     }
 }

@@ -18,10 +18,10 @@ public class AddressBookModel {
     private String address;
     private String city;
     private String state;
-    private int zip;
+    private String zip;
     private String emailId;
     private String password;
-    private long phoneNumber;
+    private String phoneNumber;
     private LocalDateTime registerDate;
     private LocalDateTime updatedDate;
 

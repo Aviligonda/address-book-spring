@@ -18,4 +18,13 @@ public interface IAddressBookService {
     AddressBookModel getEmp(Long id, String token);
 
     ResponseUtil login(String emailId, String password);
+
+    List<AddressBookModel> sorting();
+
+    List<AddressBookModel> findByCityName(String city);
+
+    List<AddressBookModel> findByStateName(String state);
+
+    List<AddressBookModel> sortByLastName();
+
 }
